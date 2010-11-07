@@ -70,7 +70,7 @@ namespace Topeka
         /// <summary>
         /// Sets the age of the cookie
         /// </summary>
-        /// <param name="seconds">The seconds that the cookie will be active</param>
+        /// <param name="seconds">The seconds that the cookie will be active, the method converts the value in seconds to the corresponding format</param>
         public void setMaxAge(int seconds)
         {
             DateTime MyDate = DateTime.Now.AddSeconds(seconds);
