@@ -3,11 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Topeka", "Topeka\Topeka.csproj", "{273654AC-898C-434E-9E77-5306C4F544CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestServer", "..\TestServer\TestServer\TestServer.csproj", "{7D2FBF42-BC9E-4201-87EC-ACEE8B62BC53}"
-	ProjectSection(ProjectDependencies) = postProject
-		{273654AC-898C-434E-9E77-5306C4F544CD} = {273654AC-898C-434E-9E77-5306C4F544CD}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,10 +13,6 @@ Global
 		{273654AC-898C-434E-9E77-5306C4F544CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{273654AC-898C-434E-9E77-5306C4F544CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{273654AC-898C-434E-9E77-5306C4F544CD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D2FBF42-BC9E-4201-87EC-ACEE8B62BC53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D2FBF42-BC9E-4201-87EC-ACEE8B62BC53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D2FBF42-BC9E-4201-87EC-ACEE8B62BC53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D2FBF42-BC9E-4201-87EC-ACEE8B62BC53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
