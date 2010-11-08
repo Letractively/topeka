@@ -101,7 +101,6 @@ namespace Topeka
         /// <param name="response">The Response object used to handle this request</param>
         public void invokeMethod(Type type, string method, Request request, Response response)
         {
-            response.headers.Add("Cache-Control", "no-cache");
             object ibaseObject = Activator.CreateInstance(type);
             // Create the parameter list
             object[] arguments = new object[] { request, response };
