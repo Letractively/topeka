@@ -104,7 +104,8 @@ namespace Topeka
                             instance = (Servlet)Activator.CreateInstance(type);
                             try
                             {
-                                if (request.Method == "GET") instance.doGet(request, response);
+                                if (request.getParameter("method") != null) instance.invokeMethod(type, request.getParameter("method"), request, response);
+                                else if (request.Method == "GET") instance.doGet(request, response);
                                 else if (request.Method == "POST") instance.doPost(request, response);
                             }
                             catch (Exception) { }
