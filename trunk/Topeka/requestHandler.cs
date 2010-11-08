@@ -38,7 +38,7 @@ namespace Topeka
     /// This class is used to handle requests from clients.
     /// It creates a new thread to handle the request.
     /// </summary>
-    public class requestHandler
+    internal class requestHandler
     {
         Socket mySocket;
         Server server;
@@ -48,7 +48,7 @@ namespace Topeka
         /// </summary>
         /// <param name="socket">The Socket connected</param>
         /// <param name="server">The Server Object</param>
-        public requestHandler(Socket socket, Server server)
+        internal requestHandler(Socket socket, Server server)
         {
             mySocket = socket;
             this.server = server;

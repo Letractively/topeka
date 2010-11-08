@@ -86,7 +86,7 @@ namespace Topeka
         /// <returns>The string representation of the cookie, in this format:
         /// Set-Cookie: CUSTOMER=WILE_E_COYOTE; path=/; expires=Wednesday, 09-Nov-99 23:12:40 GMT
         /// </returns>
-        public string serialize()
+        internal string serialize()
         {
             if (this.expireTime == null)
                 return "Set-Cookie: " + name + "=" + value + "; path=/";

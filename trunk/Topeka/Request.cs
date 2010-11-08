@@ -164,7 +164,7 @@ namespace Topeka
         /// </summary>
         /// <param name="sBuffer">The buffer received from the client</param>
         /// <param name="server">The server that handled the request</param>
-        public Request(String sBuffer, Server server)
+        internal Request(String sBuffer, Server server)
         {
             this.server = server;
             this.m_ClientIP = "";

@@ -34,7 +34,7 @@ namespace Topeka
     /// <summary>
     /// A Class used to cut strings based on delimiter chars
     /// </summary>
-    public class Tokenizer
+    internal class Tokenizer
     {
         String input;
         String token;
@@ -45,7 +45,7 @@ namespace Topeka
         /// <param name="input">The string to be tokenized</param>
         /// <param name="token">The token string that is used as delimiter</param>
         /// </summary>
-        public Tokenizer(String input, String token)
+        internal Tokenizer(String input, String token)
         {
             this.input = input;
             this.token = token;
