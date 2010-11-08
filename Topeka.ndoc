@@ -1,0 +1,19 @@
+<project SchemaVersion="1.3">
+    <assemblies>
+        <assembly location=".\Topeka\bin\Debug\Topeka.dll" documentation=".\Topeka\bin\Debug\Topeka.XML" />
+    </assemblies>
+    <documenters>
+        <documenter name="MSDN">
+            <property name="OutputDirectory" value=".\doc\" />
+            <property name="HtmlHelpName" value="Topeka" />
+            <property name="Title" value="Topeka - A lightweight embeddable multi-threaded free and easy to use Web Server library" />
+            <property name="FeedbackEmailAddress" value="juanchi@juanchi.com.ar" />
+            <property name="SdkDocVersionString" value="VS.80" />
+        </documenter>
+        <documenter name="XML">
+            <property name="OutputFile" value=".\doc\doc.xml" />
+            <property name="SdkDocVersion" value="SDK_v3_5" />
+            <property name="SdkDocVersionString" value="VS.90" />
+        </documenter>
+    </documenters>
+</project>
