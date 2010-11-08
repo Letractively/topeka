@@ -47,6 +47,7 @@ namespace Topeka
         
         TcpListener myListener;
         private int port;
+        private IPAddress ipAddress;
         internal string startTime;
         int verboseLevel;
         int logMaxSize;
@@ -74,13 +75,23 @@ namespace Topeka
         }
 
         /// <summary>
+        /// Sets the IPAddress to listen to
+        /// </summary>
+        /// <param name="ipAddress">The IPAddress of the network interface you want to listen to</param>
+        public void setIPAddress(IPAddress ipAddress)
+        {
+            this.ipAddress = ipAddress;
+        }
+
+
+        /// <summary>
         /// Starts the server, this method creates the first listening thread
         /// </summary>
         public void start()
         {
             try
             {
-                myListener = new TcpListener(IPAddress.Any, port);
+                myListener = new TcpListener(ipAddress, port);
                 myListener.Start();
                 Thread th = new Thread(new System.Threading.ThreadStart(StartListen));
                 th.Start();
@@ -200,6 +211,7 @@ namespace Topeka
         /// <param name="port">The port to listen</param>
         public Server(int port)
         {
+            ipAddress = IPAddress.Any;
             initializeLogVariables();
             this.port = port;
         }
