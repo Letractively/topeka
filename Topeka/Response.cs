@@ -133,7 +133,7 @@ namespace Topeka
         /// </summary>
         /// <param name="socket">The socket connected, used to send data</param>
         /// <param name="request">The request received from the client</param>
-        public Response(ref Socket socket, Request request)
+        internal Response(ref Socket socket, Request request)
         {
             this.request = request;
             this.socket = socket;

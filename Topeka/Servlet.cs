@@ -48,7 +48,7 @@ namespace Topeka
         /// </summary>
         /// <param name="servlet">The servlet subclass to be searched</param>
         /// <returns>Returns the Type of the servlet subclass</returns>
-        public static Type getServlet(string servlet)
+        internal static Type getServlet(string servlet)
         {
             foreach (Type type in servlets)
             {
@@ -82,7 +82,7 @@ namespace Topeka
         public abstract void doGet(Request request, Response response);
 
         /// <summary>
-        /// The abstract method that needs to be overriden to handle POST requests
+        /// The virtual method that needs to be overriden to handle POST requests
         /// </summary>
         /// <param name="request">The Request object containing information about the request received from the client</param>
         /// <param name="response">The Response object that will be used to send data to the client</param>
@@ -99,7 +99,7 @@ namespace Topeka
         /// <param name="method">The method name, in string format</param>
         /// <param name="request">The Request object used to handle this request</param>
         /// <param name="response">The Response object used to handle this request</param>
-        public void invokeMethod(Type type, string method, Request request, Response response)
+        internal void invokeMethod(Type type, string method, Request request, Response response)
         {
             object ibaseObject = Activator.CreateInstance(type);
             // Create the parameter list
