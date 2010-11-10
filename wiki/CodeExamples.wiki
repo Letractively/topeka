@@ -20,7 +20,7 @@ namespace TestServer
 
 
 = Simple Hello World =
-Simply prints Hello World to the client, note that you need to create a subclass of Servlet
+Simply prints Hello World to the client, note that you need to create a subclass of *Servlet*
 {{{
     public class helloWorld : Servlet
     {
