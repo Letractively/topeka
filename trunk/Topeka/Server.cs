@@ -223,7 +223,6 @@ namespace Topeka
 
             while (true)
             {
-            Start:
                 try
                 {
                     Socket socket = myListener.AcceptSocket();
@@ -238,7 +237,6 @@ namespace Topeka
                 catch (Exception e)
                 {
                     this.handleVerbosity(e);
-                    goto Start;
                 }
             }
 
