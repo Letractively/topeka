@@ -217,6 +217,18 @@ namespace Topeka
             this.port = port;
         }
 
+        /// <summary>
+        /// Creates the server object, setting the custom port and IPAddress received as parameter
+        /// </summary>
+        /// <param name="port">The port to listen</param>
+        /// <param name="ipAddress">The IPAddress to listen</param>
+        public Server(int port, IPAddress ipAddress)
+        {
+            this.ipAddress = ipAddress;
+            initializeLogVariables();
+            this.port = port;
+        }
+
 
         void StartListen()
         {
