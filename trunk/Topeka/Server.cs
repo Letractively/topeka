@@ -130,6 +130,7 @@ namespace Topeka
                     StringBuilder st = new StringBuilder();
                     st.Append(addDate(e.Message));
                     st.Append(e.StackTrace);
+                    printToConsoleOrFile(st.ToString());
                 }
         }
 
