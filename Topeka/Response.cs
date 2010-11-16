@@ -309,28 +309,46 @@ namespace Topeka
         /// <param name="forceDownload">Set this flag to true when you want the browser force the download instead of displaying it</param>
         public void printFile(string fileName, bool forceDownload)
         {
-            // Create a FileStream
-            FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            // Create the byte array with the buffer size defined
-            byte[] bytes = new byte[bufferSize];
-            int read;
-            this.setContentType(Response.getMimeType(Path.GetExtension(fileName).Substring(1)));
-            string attachment = "";
-            if (forceDownload) attachment = "attachment; "; // Create a header to force the browser download the file
-            this.setHeader("Content-disposition", attachment+"filename="+HTMLHelper.encode(Path.GetFileName(fileName)));
-            this.contentLength = fs.Length;
-            SendHeader();
-            // Transfer file contents to the client
-            
-            while ((read = fs.Read(bytes, 0, bytes.Length)) != 0)
+            if (File.Exists(fileName))
             {
-                if (this.socket.Connected) this.send(bytes);
-                else break;
+                // Create a FileStream
+                FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                // Create the byte array with the buffer size defined
+                byte[] bytes = new byte[bufferSize];
+                int read = bufferSize;
+                this.setContentType(Response.getMimeType(Path.GetExtension(fileName).Substring(1)));
+                string attachment = "";
+                if (forceDownload) attachment = "attachment; "; // Create a header to force the browser download the file
+                this.setHeader("Content-disposition", attachment + "filename=" + HTMLHelper.encode(Path.GetFileName(fileName)));
+                this.contentLength = fs.Length;
+                SendHeader();
+
+                // Transfer file contents to the client
+                while ((read = fs.Read(bytes, 0, bytes.Length)) != 0)
+                {
+                    if (read < bytes.Length)
+                    {
+                        byte[] finalBytes = new byte[read];
+                        Array.Copy(bytes, finalBytes, read);
+                        if (this.socket.Connected) this.send(finalBytes);
+                        break;
+                    }
+                    else
+                    {
+                        if (this.socket.Connected) this.send(bytes);
+                        else break;
+                    }
+                }
+                // Close the file
+                fs.Close();
+                // Set the AlreadyFlushed flag
+                alreadyFlushed = true;
             }
-            // Close the file
-            fs.Close();
-            // Set the AlreadyFlushed flag
-            alreadyFlushed = true;
+            else
+            {
+                statusCode = "404";
+                println("<font face='verdana'>Resource <b>\"" + request.Page + "\"</b> not found.</font>");
+            }
         }
 
 
@@ -377,6 +395,7 @@ namespace Topeka
             headers.Add("Server", System.Environment.MachineName);
             headers.Add("Content-Type", "text/html");
             headers.Add("Accept-Ranges", "bytes");
+            headers.Add("Cache-Control", "no-cache");
         }
 
         /// <summary>

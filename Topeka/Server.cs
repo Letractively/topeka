@@ -53,6 +53,7 @@ namespace Topeka
         int verboseLevel;
         int logMaxSize;
         string logFileName;
+        internal string rootPath;
 
         /// <summary>
         /// Sets the Verbosity level to print to a console or file
@@ -65,6 +66,20 @@ namespace Topeka
         {
             this.verboseLevel = verboseLevel;
         }
+
+
+        /// <summary>
+        /// Sets the Root Path to handle static pages. 
+        /// If not set, the server will not handle static pages
+        /// </summary>
+        /// <param name="rootPath">The Path where you want to serve. It must be an absolute path.</param>
+        public void setRootPath(string rootPath)
+        {
+            if (rootPath.EndsWith(Path.DirectorySeparatorChar.ToString())) this.rootPath = rootPath;
+            else this.rootPath = rootPath + Path.DirectorySeparatorChar.ToString();
+        }
+
+
 
         /// <summary>
         /// Sets the file name of the log
@@ -94,7 +109,7 @@ namespace Topeka
             {
                 myListener = new TcpListener(ipAddress, port);
                 myListener.Start();
-                Thread th = new Thread(new System.Threading.ThreadStart(StartListen));
+                Thread th = new Thread(new System.Threading.ThreadStart(AcceptSocket));
                 th.Start();
                 this.handleVerbosity("Web server is now running...");
                 startTime = addDate("");
@@ -205,6 +220,7 @@ namespace Topeka
             logMaxSize = 20971520;
             verboseLevel = 0;
             logFileName = null;
+            rootPath = null;
         }
 
         /// <summary>
@@ -230,29 +246,32 @@ namespace Topeka
             this.port = port;
         }
 
-
-        void StartListen()
+        void AcceptCallBack(IAsyncResult ar)
         {
-
-            while (true)
+            try
             {
-                try
-                {
-                    Socket socket = myListener.AcceptSocket();
+                TcpListener listener = (TcpListener)ar.AsyncState;
+                Socket socket = listener.EndAcceptSocket(ar);
+                requestHandler handler = new requestHandler(socket, this);
+                AcceptSocket();
 
-                    if (socket.Connected)
-                    {
-                        requestHandler handler = new requestHandler(socket,this);
-                    }
-                    else
-                        return;
-                }
-                catch (Exception e)
-                {
-                    this.handleVerbosity(e);
-                }
             }
+            catch (Exception e)
+            {
+                handleVerbosity(e);
+            }
+        }
 
+        void AcceptSocket()
+        {
+            try
+            {
+                myListener.BeginAcceptSocket(new AsyncCallback(AcceptCallBack), myListener);
+            }
+            catch (Exception e)
+            {
+                handleVerbosity(e);
+            }
         }
     }
 
