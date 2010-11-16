@@ -31,6 +31,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.IO;
 
 namespace Topeka
 {   
@@ -56,6 +57,12 @@ namespace Topeka
             thread.Start();
         }
 
+        internal bool fileExists(string page)
+        {
+            if (server.rootPath != null)
+                if (File.Exists(server.rootPath + page)) return true;
+            return false;
+        }
 
         private void startHandling()
         {
@@ -88,13 +95,11 @@ namespace Topeka
 
                 Servlet instance;
 
-                string servlet=request.Class;
+                server.handleVerbosity("Client requested " + request.Page);
 
-                if (servlet == "") servlet = "index";
+                if (request.Page == "") request.Page = "index";
 
-                server.handleVerbosity("Client requested " + servlet);
-
-                    Type type = Servlet.getServlet(servlet);
+                Type type = Servlet.getServlet(request.Page);
 
 
                     if (type != null)
@@ -111,25 +116,36 @@ namespace Topeka
                             catch (Exception) { }
 
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            response.statusCode = "404";
-                            response.println("Resource <b>\"" + request.Class + "\"</b> not found.");
-                            request.server.handleVerbosity("Resource " + request.Class + " not found.");
-                            request.server.handleVerbosity(e);
+                            request.server.handleVerbosity("Resource " + request.Page + " not found.");
                         }
                     }
-                    else if (servlet == "index") 
+                    else if (request.Page == "index")
                     {
-                        Servlet.doGetIndex(request, response);
+                        if (fileExists("index.htm")) response.printFile(server.rootPath+"index.htm", false);
+                        else if (fileExists("Index.htm")) response.printFile(server.rootPath+"Index.htm", false);
+                        else if (fileExists("index.html")) response.printFile(server.rootPath+"index.html", false);
+                        else if (fileExists("Index.html")) response.printFile(server.rootPath+"Index.html", false);
+                        else Servlet.doGetIndex(request, response);
                     }
-                    else if (servlet.ToUpper() == "FAVICON.ICO")
+                    else if (fileExists(HTMLHelper.decode(request.Page))) 
+                    {
+                        response.printFile(server.rootPath+HTMLHelper.decode(request.Page), false);
+                    }
+                    else if (request.Page.ToUpper() == "FAVICON.ICO")
                     {
                         Servlet.doGetFavicon(request, response);
                     }
-                    else if (servlet.ToUpper() == "TOPEKA.PNG")
+                    else if (request.Page.ToUpper() == "TOPEKA.PNG")
                     {
                         Servlet.doGetTopekaLogo(request, response);
+                    }
+
+                    else
+                    {
+                        response.statusCode = "404";
+                        response.println("<font face='verdana'>Resource <b>\"" + HTMLHelper.decode(request.Page) + "\"</b> not found.</font>");
                     }
 
                 response.flush();

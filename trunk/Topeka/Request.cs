@@ -129,7 +129,7 @@ namespace Topeka
         {get{return m_Cookies;}}
 
         Hashtable parameters;
-        internal String Class;
+        internal String Page;
 
         string substract(string temp)
         {
@@ -177,7 +177,7 @@ namespace Topeka
             m_Method = fullRequest.nextToken();
             m_Path = fullRequest.nextToken();
             Tokenizer path = new Tokenizer(m_Path.Substring(1), "?");
-            Class = path.nextToken();
+            Page = path.nextToken();
             parseParameters(path.nextToken());
 
             m_HTTPVersion = fullRequest.nextToken();
