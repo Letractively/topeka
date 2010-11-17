@@ -53,8 +53,7 @@ namespace Topeka
         {
             mySocket = socket;
             this.server = server;
-            Thread thread = new Thread(startHandling);
-            thread.Start();
+            ThreadPool.QueueUserWorkItem(startHandling);
         }
 
         internal bool fileExists(string page)
@@ -64,7 +63,7 @@ namespace Topeka
             return false;
         }
 
-        private void startHandling()
+        private void startHandling(object threadInformation)
         {
             try
             {
