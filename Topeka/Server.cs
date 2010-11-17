@@ -54,6 +54,8 @@ namespace Topeka
         int logMaxSize;
         string logFileName;
         internal string rootPath;
+        internal bool stopRequested;
+        ManualResetEvent signalThread;
 
         /// <summary>
         /// Sets the Verbosity level to print to a console or file
@@ -199,6 +201,7 @@ namespace Topeka
         /// </summary>
         public void stop()
         {
+            stopRequested = true;
             try
             {
                 if (this.myListener.Server.Connected)
@@ -215,12 +218,27 @@ namespace Topeka
             }
         }
 
-        void initializeLogVariables()
+        void initializeVariables()
         {
             logMaxSize = 20971520;
             verboseLevel = 0;
             logFileName = null;
             rootPath = null;
+            stopRequested = false;
+            signalThread = new ManualResetEvent(false);
+            ThreadPool.SetMaxThreads(32, 32);
+            ThreadPool.SetMinThreads(8, 8);
+        }
+
+        /// <summary>
+        /// Sets the maximum number of threads of the ThreadPool, It is the same as calling ThreadPool.SetMaxThreads. 
+        /// This value is for the entire process, so if you set it to a very low level, then you have to be careful with
+        /// other libraries that may use the ThreadPool.
+        /// </summary>
+        /// <param name="maxThreads">The Maximum number of threads to set. It sets the same value in Worker Threads and Async I/O Threads</param>
+        public void SetMaxThreads(int maxThreads)
+        {
+            ThreadPool.SetMaxThreads(maxThreads, maxThreads);
         }
 
         /// <summary>
@@ -230,7 +248,7 @@ namespace Topeka
         public Server(int port)
         {
             ipAddress = IPAddress.Any;
-            initializeLogVariables();
+            initializeVariables();
             this.port = port;
         }
 
@@ -242,9 +260,11 @@ namespace Topeka
         public Server(int port, IPAddress ipAddress)
         {
             this.ipAddress = ipAddress;
-            initializeLogVariables();
+            initializeVariables();
             this.port = port;
         }
+
+       
 
         void AcceptCallBack(IAsyncResult ar)
         {
@@ -253,8 +273,7 @@ namespace Topeka
                 TcpListener listener = (TcpListener)ar.AsyncState;
                 Socket socket = listener.EndAcceptSocket(ar);
                 requestHandler handler = new requestHandler(socket, this);
-                AcceptSocket();
-
+                signalThread.Set();
             }
             catch (Exception e)
             {
@@ -264,14 +283,21 @@ namespace Topeka
 
         void AcceptSocket()
         {
-            try
+            while (true)
             {
-                myListener.BeginAcceptSocket(new AsyncCallback(AcceptCallBack), myListener);
+                signalThread.Reset();
+                try
+                {
+                    myListener.BeginAcceptSocket(new AsyncCallback(AcceptCallBack), myListener);
+                }
+                catch (Exception e)
+                {
+                    handleVerbosity(e);
+                }
+                signalThread.WaitOne();
+                if (stopRequested) break;
             }
-            catch (Exception e)
-            {
-                handleVerbosity(e);
-            }
+
         }
     }
 
