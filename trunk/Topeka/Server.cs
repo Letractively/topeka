@@ -236,7 +236,7 @@ namespace Topeka
         /// other libraries that may use the ThreadPool.
         /// </summary>
         /// <param name="maxThreads">The Maximum number of threads to set. It sets the same value in Worker Threads and Async I/O Threads</param>
-        public void SetMaxThreads(int maxThreads)
+        public void setMaxThreads(int maxThreads)
         {
             ThreadPool.SetMaxThreads(maxThreads, maxThreads);
         }

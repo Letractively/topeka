@@ -114,6 +114,15 @@ namespace Topeka
         public string Connection
         {get{return m_Connection;}}
 
+
+        private ArrayList m_Ranges;
+        /// <summary>
+        /// An array of Range Objects that determine the Ranges that the browser wants to retrieve
+        /// </summary>
+        public ArrayList Ranges
+        { get { return m_Ranges; } }
+
+
         internal string m_ClientIP;
         /// <summary>
         /// The Client IP connected 
@@ -170,6 +179,7 @@ namespace Topeka
             this.m_ClientIP = "";
             this.sBuffer = sBuffer;
             this.m_Cookies = new ArrayList();
+            this.m_Ranges = new ArrayList();
             this.parameters = new Hashtable();
 
             Tokenizer toki = new Tokenizer(sBuffer, "\r\n");
@@ -203,6 +213,19 @@ namespace Topeka
                             string cookieTemp = cookiesToki.nextToken();
                             Tokenizer inCookie = new Tokenizer(cookieTemp, "=");
                             this.m_Cookies.Add(new Cookie(inCookie.nextToken(), inCookie.nextToken()));
+                        }
+                    }
+                    else if (temp.IndexOf("Range:") == 0)
+                    {
+                        string rangesTemp = substract(temp);
+                        Tokenizer rangeValues = new Tokenizer(rangesTemp, "=");
+                        string rangeType = rangeValues.nextToken();
+                        Tokenizer differentRanges = new Tokenizer(rangeValues.nextToken(), ",");
+                        while (differentRanges.hasMoreTokens())
+                        {
+
+                            string range = differentRanges.nextToken();
+                            this.m_Ranges.Add(new Range(range));
                         }
                     }
                     else if (temp == "")

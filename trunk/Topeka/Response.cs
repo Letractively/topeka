@@ -52,6 +52,7 @@ namespace Topeka
             statusCodes.Add("202", "Accepted");
             statusCodes.Add("203", "Partial Information");
             statusCodes.Add("204", "No Response");
+            statusCodes.Add("206", "Partial content");
             statusCodes.Add("400", "Bad request");
             statusCodes.Add("401", "Unauthorized");
             statusCodes.Add("402", "PaymentRequired");
@@ -301,6 +302,16 @@ namespace Topeka
             else return "application/octet-stream";
         }
 
+        long getTotalLength()
+        {
+            long length = 0;
+            foreach (Range range in request.Ranges)
+            {
+                length += range._lastByte - range._firstByte;
+            }
+            return length;
+        }
+
         /// <summary>
         /// Prints a file to the client, the MIME type is sent if the extension is known, this method uses a buffer to read the file before sending it to the socket.
         /// If the socket is closed, then it stops reading the file. Use this method when you need to transfer large files that cannot be held in a memory stream.
@@ -313,32 +324,34 @@ namespace Topeka
             {
                 // Create a FileStream
                 FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-                // Create the byte array with the buffer size defined
-                byte[] bytes = new byte[bufferSize];
-                int read = bufferSize;
                 this.setContentType(Response.getMimeType(Path.GetExtension(fileName).Substring(1)));
                 string attachment = "";
                 if (forceDownload) attachment = "attachment; "; // Create a header to force the browser download the file
                 this.setHeader("Content-disposition", attachment + "filename=" + HTMLHelper.encode(Path.GetFileName(fileName)));
-                this.contentLength = fs.Length;
+                if (request.Ranges.Count > 0)
+                {
+                    foreach (Range range in request.Ranges)
+                    {
+                        if (range._lastByte == 0) range._lastByte = fs.Length;
+                        headers.Add("Content-Range", range._firstByte + "-" + (range._lastByte - 1) + "/" + fs.Length);
+                    }
+                    this.contentLength = getTotalLength();
+                    this.statusCode = "206";
+                }
+                else this.contentLength = fs.Length;
+
                 SendHeader();
 
-                // Transfer file contents to the client
-                while ((read = fs.Read(bytes, 0, bytes.Length)) != 0)
+                if (request.Ranges.Count > 0)
                 {
-                    if (read < bytes.Length)
+                    foreach (Range range in request.Ranges)
                     {
-                        byte[] finalBytes = new byte[read];
-                        Array.Copy(bytes, finalBytes, read);
-                        if (this.socket.Connected) this.send(finalBytes);
-                        break;
-                    }
-                    else
-                    {
-                        if (this.socket.Connected) this.send(bytes);
-                        else break;
+                        transferByteRange(fs, range._firstByte, range._lastByte);
                     }
                 }
+                else
+                    transferByteRange(fs, 0, fs.Length);
+
                 // Close the file
                 fs.Close();
                 // Set the AlreadyFlushed flag
@@ -348,6 +361,42 @@ namespace Topeka
             {
                 statusCode = "404";
                 println("<font face='verdana'>Resource <b>\"" + request.Page + "\"</b> not found.</font>");
+            }
+        }
+
+        void transferByteRange(FileStream fs, long startPos, long endPos)
+        {
+            // Create the byte array with the buffer size defined
+            byte[] bytes = new byte[bufferSize];
+            int read = bufferSize;
+            long bytesRemaining = endPos - startPos;
+
+            // Sets the position to the defined
+            fs.Position = startPos;
+
+            // Transfer file contents to the client
+            while ((read = fs.Read(bytes, 0, bytes.Length)) != 0)
+            {
+                if (read > bytesRemaining)
+                {
+                    byte[] finalBytes = new byte[bytesRemaining];
+                    Array.Copy(bytes, finalBytes, bytesRemaining);
+                    if (this.socket.Connected) this.send(finalBytes);
+                    break;
+                }
+                else if (read < bytes.Length)
+                {
+                    byte[] finalBytes = new byte[read];
+                    Array.Copy(bytes, finalBytes, read);
+                    if (this.socket.Connected) this.send(finalBytes);
+                    break;
+                }
+                else
+                {
+                    if (this.socket.Connected) this.send(bytes);
+                    else break;
+                }
+                bytesRemaining -= read;
             }
         }
 
