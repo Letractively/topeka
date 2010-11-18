@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Cookie.cs" />
     <Compile Include="HTMLHelper.cs" />
+    <Compile Include="Range.cs" />
     <Compile Include="Request.cs" />
     <Compile Include="requestHandler.cs" />
     <Compile Include="Response.cs" />
