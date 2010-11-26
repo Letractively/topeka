@@ -226,19 +226,6 @@ namespace Topeka
             rootPath = null;
             stopRequested = false;
             signalThread = new ManualResetEvent(false);
-            ThreadPool.SetMaxThreads(32, 32);
-            ThreadPool.SetMinThreads(8, 8);
-        }
-
-        /// <summary>
-        /// Sets the maximum number of threads of the ThreadPool, It is the same as calling ThreadPool.SetMaxThreads. 
-        /// This value is for the entire process, so if you set it to a very low level, then you have to be careful with
-        /// other libraries that may use the ThreadPool.
-        /// </summary>
-        /// <param name="maxThreads">The Maximum number of threads to set. It sets the same value in Worker Threads and Async I/O Threads</param>
-        public void setMaxThreads(int maxThreads)
-        {
-            ThreadPool.SetMaxThreads(maxThreads, maxThreads);
         }
 
         /// <summary>
