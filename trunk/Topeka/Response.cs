@@ -429,6 +429,16 @@ namespace Topeka
         }
 
         /// <summary>
+        /// Set the status code for the response, by default the status code is 200 OK
+        /// </summary>
+        /// <param name="code">The code to set</param>
+        public void setStatusCode(string code)
+        {
+            this.statusCode = code;
+        }
+
+
+        /// <summary>
         /// Construct a Response object that can will be used to send data to the client
         /// </summary>
         /// <param name="socket">The socket connected, used to send data</param>
