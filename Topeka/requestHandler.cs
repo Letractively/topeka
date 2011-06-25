@@ -30,6 +30,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Net.Security;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.IO;
 
@@ -41,18 +44,29 @@ namespace Topeka
     /// </summary>
     internal class requestHandler
     {
-        Socket mySocket;
         Server server;
+        Stream stream;
+        TcpClient client;
 
         /// <summary>
         /// Creates a requestHandler object and starts the thread for handling the request
         /// </summary>
-        /// <param name="socket">The Socket connected</param>
+        /// <param name="client">The TCPClient connected</param>
         /// <param name="server">The Server Object</param>
-        internal requestHandler(Socket socket, Server server)
+        internal requestHandler(TcpClient client, Server server)
         {
-            mySocket = socket;
             this.server = server;
+            this.client = client;
+            if (this.server.isSSL())
+            {
+                SSLServer sslServer = (SSLServer) this.server;
+                SslStream sslStream = new SslStream(client.GetStream(), false);
+                sslStream.AuthenticateAsServer(sslServer.getCertificate(), false, SslProtocols.Tls, true);
+                sslStream.ReadTimeout = 5000;
+                sslStream.WriteTimeout = 5000;
+                this.stream = sslStream;
+            }
+            else this.stream = client.GetStream();
             ThreadPool.QueueUserWorkItem(startHandling);
         }
 
@@ -67,18 +81,10 @@ namespace Topeka
         {
             try
             {
-                Tokenizer ip = new Tokenizer((string)mySocket.RemoteEndPoint.ToString(), ":");
-
-                // Receive max 16k from the client
-                Byte[] receiveBuffer = new Byte[16384];
-
-                int i = mySocket.Receive(receiveBuffer, receiveBuffer.Length, 0);
-
-                // Convert the data received to UTF8
-                string stringBuffer = Encoding.UTF8.GetString(receiveBuffer);
+                Tokenizer ip = new Tokenizer((string)client.Client.RemoteEndPoint.ToString(), ":");
 
                 // Create the request object
-                Request request = new Request(stringBuffer, server);
+                Request request = new Request(this.stream, server);
 
                 try
                 {
@@ -90,7 +96,7 @@ namespace Topeka
                 }
 
 
-                Response response = new Response(ref mySocket, request);
+                Response response = new Response(ref stream, request);
 
                 Servlet instance;
 
@@ -101,51 +107,51 @@ namespace Topeka
                 Type type = Servlet.getServlet(request.Page);
 
 
-                    if (type != null)
+                if (type != null)
+                {
+                    try
                     {
+                        instance = (Servlet)Activator.CreateInstance(type);
                         try
                         {
-                            instance = (Servlet)Activator.CreateInstance(type);
-                            try
-                            {
-                                if (request.getParameter("method") != null) instance.invokeMethod(type, request.getParameter("method"), request, response);
-                                else if (request.Method == "GET") instance.doGet(request, response);
-                                else if (request.Method == "POST") instance.doPost(request, response);
-                            }
-                            catch (Exception) { }
-
+                            if (request.getParameter("method") != null) instance.invokeMethod(type, request.getParameter("method"), request, response);
+                            else if (request.Method == "GET") instance.doGet(request, response);
+                            else if (request.Method == "POST") instance.doPost(request, response);
                         }
-                        catch (Exception)
-                        {
-                            request.server.handleVerbosity("Resource " + request.Page + " not found.");
-                        }
-                    }
-                    else if (request.Page == "index")
-                    {
-                        if (fileExists("index.htm")) response.printFile(server.rootPath+"index.htm", false);
-                        else if (fileExists("Index.htm")) response.printFile(server.rootPath+"Index.htm", false);
-                        else if (fileExists("index.html")) response.printFile(server.rootPath+"index.html", false);
-                        else if (fileExists("Index.html")) response.printFile(server.rootPath+"Index.html", false);
-                        else Servlet.doGetIndex(request, response);
-                    }
-                    else if (fileExists(HTMLHelper.decode(request.Page))) 
-                    {
-                        response.printFile(server.rootPath+HTMLHelper.decode(request.Page), false);
-                    }
-                    else if (request.Page.ToUpper() == "FAVICON.ICO")
-                    {
-                        Servlet.doGetFavicon(request, response);
-                    }
-                    else if (request.Page.ToUpper() == "TOPEKA.PNG")
-                    {
-                        Servlet.doGetTopekaLogo(request, response);
-                    }
+                        catch (Exception) { }
 
-                    else
-                    {
-                        response.statusCode = "404";
-                        response.println("<font face='verdana'>Resource <b>\"" + HTMLHelper.decode(request.Page) + "\"</b> not found.</font>");
                     }
+                    catch (Exception)
+                    {
+                        request.server.handleVerbosity("Resource " + request.Page + " not found.");
+                    }
+                }
+                else if (request.Page == "index")
+                {
+                    if (fileExists("index.htm")) response.printFile(server.rootPath + "index.htm", false);
+                    else if (fileExists("Index.htm")) response.printFile(server.rootPath + "Index.htm", false);
+                    else if (fileExists("index.html")) response.printFile(server.rootPath + "index.html", false);
+                    else if (fileExists("Index.html")) response.printFile(server.rootPath + "Index.html", false);
+                    else Servlet.doGetIndex(request, response);
+                }
+                else if (fileExists(HTMLHelper.decode(request.Page)))
+                {
+                    response.printFile(server.rootPath + HTMLHelper.decode(request.Page), false);
+                }
+                else if (request.Page.ToUpper() == "FAVICON.ICO")
+                {
+                    Servlet.doGetFavicon(request, response);
+                }
+                else if (request.Page.ToUpper() == "TOPEKA.PNG")
+                {
+                    Servlet.doGetTopekaLogo(request, response);
+                }
+
+                else
+                {
+                    response.statusCode = "404";
+                    response.println("<font face='verdana'>Resource <b>\"" + HTMLHelper.decode(request.Page) + "\"</b> not found.</font>");
+                }
 
                 response.flush();
                 request = null;
@@ -155,7 +161,10 @@ namespace Topeka
             {
                 server.handleVerbosity(e);
             }
-            mySocket.Close();
+            finally
+            {
+                this.client.Close();
+            }
         }
     }
 }

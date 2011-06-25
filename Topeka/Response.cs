@@ -254,8 +254,8 @@ namespace Topeka
         }
 
 
-        Socket socket;
-        MemoryStream stream;
+        Stream stream;
+        MemoryStream memoryStream;
         internal Hashtable headers;
         internal bool alreadyFlushed;
         internal long contentLength;
@@ -272,7 +272,7 @@ namespace Topeka
         /// </param>
         public void print(String whatToPrint)
         {
-            stream.Write(Encoding.ASCII.GetBytes(whatToPrint), 0, Encoding.ASCII.GetBytes(whatToPrint).Length);
+            memoryStream.Write(Encoding.ASCII.GetBytes(whatToPrint), 0, Encoding.ASCII.GetBytes(whatToPrint).Length);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace Topeka
         /// <param name="whatToPrint">The array of objects to be sent</param>
         public void print(Byte[] whatToPrint)
         {
-            stream.Write(whatToPrint, 0, whatToPrint.Length);
+            memoryStream.Write(whatToPrint, 0, whatToPrint.Length);
         }
 
         internal static string getMimeType(string extension)
@@ -381,20 +381,19 @@ namespace Topeka
                 {
                     byte[] finalBytes = new byte[bytesRemaining];
                     Array.Copy(bytes, finalBytes, bytesRemaining);
-                    if (this.socket.Connected) this.send(finalBytes);
+                    this.send(finalBytes);
                     break;
                 }
                 else if (read < bytes.Length)
                 {
                     byte[] finalBytes = new byte[read];
                     Array.Copy(bytes, finalBytes, read);
-                    if (this.socket.Connected) this.send(finalBytes);
+                    this.send(finalBytes);
                     break;
                 }
                 else
                 {
-                    if (this.socket.Connected) this.send(bytes);
-                    else break;
+                    this.send(bytes);
                 }
                 bytesRemaining -= read;
             }
@@ -403,7 +402,7 @@ namespace Topeka
 
         void initializeMemoryStream()
         {
-            this.stream = new MemoryStream();
+            this.memoryStream = new MemoryStream();
         }
 
         /// <summary>
@@ -441,12 +440,12 @@ namespace Topeka
         /// <summary>
         /// Construct a Response object that can will be used to send data to the client
         /// </summary>
-        /// <param name="socket">The socket connected, used to send data</param>
+        /// <param name="stream">The stream connected, used to send data</param>
         /// <param name="request">The request received from the client</param>
-        internal Response(ref Socket socket, Request request)
+        internal Response(ref Stream stream, Request request)
         {
             this.request = request;
-            this.socket = socket;
+            this.stream = stream;
             initializeMemoryStream();
             this.cookies = new ArrayList();
             this.statusCode = "200";
@@ -470,34 +469,18 @@ namespace Topeka
         {
             if (!alreadyFlushed)
             {
-                this.contentLength = this.stream.Length;
+                this.contentLength = this.memoryStream.Length;
                 SendHeader();
-                send(stream.ToArray());
+                send(memoryStream.ToArray());
             }
             alreadyFlushed = true;
         }
 
         void send(Byte[] bytesToSend)
         {
-            int bytes = 0;
-
             try
             {
-                if (this.socket.Connected)
-                {
-                    bytes = this.socket.Send(bytesToSend, bytesToSend.Length, 0);
-                    if (bytes == -1)
-                    {
-                        // Socket error
-                    }
-                    else
-                    {
-                        // I Think it's OK
-                    }
-                }
-                else
-                {
-                }
+            this.stream.Write(bytesToSend, 0, bytesToSend.Length);
             }
             catch (Exception e)
             {
