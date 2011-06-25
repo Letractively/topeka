@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Text;
+using System.IO;
 
 namespace Topeka
 {
@@ -171,13 +172,21 @@ namespace Topeka
         /// <summary>
         /// Construct a Request object that contains the information received from the client
         /// </summary>
-        /// <param name="sBuffer">The buffer received from the client</param>
+        /// <param name="stream">The stream associated to the TCPClient</param>
         /// <param name="server">The server that handled the request</param>
-        internal Request(String sBuffer, Server server)
+        internal Request(Stream stream, Server server)
         {
+
             this.server = server;
             this.m_ClientIP = "";
-            this.sBuffer = sBuffer;
+
+            // Receive max 16k from the client
+            Byte[] receiveBuffer = new Byte[16384];
+            int i = stream.Read(receiveBuffer, 0 , receiveBuffer.Length);
+
+            // Convert the data received to UTF8
+            this.sBuffer = Encoding.UTF8.GetString(receiveBuffer);
+            
             this.m_Cookies = new ArrayList();
             this.m_Ranges = new ArrayList();
             this.parameters = new Hashtable();

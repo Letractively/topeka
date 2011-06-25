@@ -45,17 +45,18 @@ namespace Topeka
     /// </summary>
     public class Server
     {
-        
-        TcpListener myListener;
-        private int port;
-        private IPAddress ipAddress;
+
+        internal TcpListener myListener;
+        internal int port;
+        internal IPAddress ipAddress;
         internal string startTime;
-        int verboseLevel;
-        int logMaxSize;
-        string logFileName;
+        internal int verboseLevel;
+        internal int logMaxSize;
+        internal string logFileName;
         internal string rootPath;
         internal bool stopRequested;
-        ManualResetEvent signalThread;
+        internal bool ssl;
+        internal ManualResetEvent signalThread;
 
         /// <summary>
         /// Sets the Verbosity level to print to a console or file
@@ -69,6 +70,20 @@ namespace Topeka
             this.verboseLevel = verboseLevel;
         }
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public Server()
+        { 
+        }
+
+        /// <summary>
+        /// Returns true if the server is SSL-Enabled
+        /// </summary>
+        public bool isSSL()
+        {
+            return this.ssl;
+        }
 
         /// <summary>
         /// Sets the Root Path to handle static pages. 
@@ -218,7 +233,7 @@ namespace Topeka
             }
         }
 
-        void initializeVariables()
+        internal void initializeVariables()
         {
             logMaxSize = 20971520;
             verboseLevel = 0;
@@ -258,8 +273,8 @@ namespace Topeka
             try
             {
                 TcpListener listener = (TcpListener)ar.AsyncState;
-                Socket socket = listener.EndAcceptSocket(ar);
-                requestHandler handler = new requestHandler(socket, this);
+                TcpClient client = listener.EndAcceptTcpClient(ar);
+                requestHandler handler = new requestHandler(client, this);
                 signalThread.Set();
             }
             catch (Exception e)
@@ -275,7 +290,7 @@ namespace Topeka
                 signalThread.Reset();
                 try
                 {
-                    myListener.BeginAcceptSocket(new AsyncCallback(AcceptCallBack), myListener);
+                    myListener.BeginAcceptTcpClient(new AsyncCallback(AcceptCallBack), myListener);
                 }
                 catch (Exception e)
                 {
