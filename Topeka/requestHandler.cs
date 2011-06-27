@@ -62,8 +62,8 @@ namespace Topeka
                 SSLServer sslServer = (SSLServer) this.server;
                 SslStream sslStream = new SslStream(client.GetStream(), false);
                 sslStream.AuthenticateAsServer(sslServer.getCertificate(), false, SslProtocols.Tls, true);
-                sslStream.ReadTimeout = 5000;
-                sslStream.WriteTimeout = 5000;
+                sslStream.ReadTimeout = 15000;
+                sslStream.WriteTimeout = 15000;
                 this.stream = sslStream;
             }
             else this.stream = client.GetStream();
