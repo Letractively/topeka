@@ -72,6 +72,20 @@ namespace Topeka
         }
 
         /// <summary>
+        /// Creates the server object, setting the custom port received as parameter
+        /// </summary>
+        /// <param name="port">The port to listen</param>
+        /// <param name="certificate">An X509Certificate object previously created</param>
+        public SSLServer(int port, X509Certificate certificate)
+        {
+            serverCertificate = certificate;
+            this.ssl = true;
+            ipAddress = IPAddress.Any;
+            initializeVariables();
+            this.port = port;
+        }
+
+        /// <summary>
         /// Creates the server object, setting the custom port and IPAddress received as parameter
         /// </summary>
         /// <param name="port">The port to listen</param>
