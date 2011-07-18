@@ -57,17 +57,23 @@ namespace Topeka
         {
             this.server = server;
             this.client = client;
-            if (this.server.isSSL())
-            {
-                SSLServer sslServer = (SSLServer) this.server;
-                SslStream sslStream = new SslStream(client.GetStream(), false);
-                sslStream.AuthenticateAsServer(sslServer.getCertificate(), false, SslProtocols.Tls, true);
-                sslStream.ReadTimeout = 15000;
-                sslStream.WriteTimeout = 15000;
-                this.stream = sslStream;
+            try{
+                if (this.server.isSSL())
+                {
+                    SSLServer sslServer = (SSLServer) this.server;
+                    SslStream sslStream = new SslStream(client.GetStream(), false);
+                    sslStream.AuthenticateAsServer(sslServer.getCertificate(), false, SslProtocols.Tls, true);
+                    sslStream.ReadTimeout = 15000;
+                    sslStream.WriteTimeout = 15000;
+                    this.stream = sslStream;
+                }
+                else this.stream = client.GetStream();
+                ThreadPool.QueueUserWorkItem(startHandling);
             }
-            else this.stream = client.GetStream();
-            ThreadPool.QueueUserWorkItem(startHandling);
+            catch (Exception e)
+            {
+                this.server.handleVerbosity(e);
+            }
         }
 
         internal bool fileExists(string page)
