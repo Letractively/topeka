@@ -129,18 +129,18 @@ namespace Topeka
         internal static void doGetFavicon(Request request, Response response)
         {
             response.setContentType("image/x-icon");
-            printResource("Topeka.img.favicon.ico", request, response);
+            printResource(Assembly.GetExecutingAssembly(), "Topeka.img.favicon.ico", request, response);
         }
 
         internal static void doGetTopekaLogo(Request request, Response response)
         {
             response.setContentType("image/png");
-            printResource("Topeka.img.Topeka.png", request, response);
+            printResource(Assembly.GetExecutingAssembly(), "Topeka.img.Topeka.png", request, response);
         }
 
-        internal static void printResource(string resource, Request request, Response response)
+        internal static void printResource(Assembly assembly, string resource, Request request, Response response)
         {
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource);
+            Stream stream = assembly.GetManifestResourceStream(resource);
             BinaryReader reader = new BinaryReader(stream);
             byte[] bytes = new byte[stream.Length];
                 int read;

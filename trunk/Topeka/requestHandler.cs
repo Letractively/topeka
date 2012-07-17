@@ -142,6 +142,7 @@ namespace Topeka
                 }
                 else if (fileExists(HTMLHelper.decode(request.Page)))
                 {
+                    if (server.rootPath!=null)
                     response.printFile(server.rootPath + HTMLHelper.decode(request.Page), false);
                 }
                 else if (request.Page.ToUpper() == "FAVICON.ICO")
@@ -151,6 +152,11 @@ namespace Topeka
                 else if (request.Page.ToUpper() == "TOPEKA.PNG")
                 {
                     Servlet.doGetTopekaLogo(request, response);
+                }
+                else if (server.assembly != null)
+                {
+                    string resource = server.assembly_namespace + "." + request.Page.Replace("/", ".");
+                    Servlet.printResource(server.assembly, resource, request, response);
                 }
 
                 else
