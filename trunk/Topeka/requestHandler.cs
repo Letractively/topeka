@@ -153,7 +153,7 @@ namespace Topeka
                 {
                     Servlet.doGetTopekaLogo(request, response);
                 }
-                else if (server.assembly != null)
+                else if (server.assembly != null && Servlet.getResourceStream(server.assembly, server.assembly_namespace + "." + request.Page.Replace("/", ".")) != null)
                 {
                     string resource = server.assembly_namespace + "." + request.Page.Replace("/", ".");
                     Servlet.printResource(server.assembly, resource, request, response);

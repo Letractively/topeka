@@ -138,6 +138,11 @@ namespace Topeka
             printResource(Assembly.GetExecutingAssembly(), "Topeka.img.Topeka.png", request, response);
         }
 
+        internal static Stream getResourceStream(Assembly assembly, string resource)
+        {
+            return assembly.GetManifestResourceStream(resource);
+        }
+
         internal static void printResource(Assembly assembly, string resource, Request request, Response response)
         {
             Stream stream = assembly.GetManifestResourceStream(resource);
