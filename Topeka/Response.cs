@@ -41,7 +41,7 @@ namespace Topeka
     public class Response
     {
         static Hashtable statusCodes;
-        static Hashtable mimeTypes;
+        internal static Hashtable mimeTypes;
         static int bufferSize = 524288; // 512k
 
         static Response()

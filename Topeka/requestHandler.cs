@@ -155,8 +155,9 @@ namespace Topeka
                 }
                 else if (server.assembly != null && Servlet.getResourceStream(server.assembly, server.assembly_namespace + "." + request.Page.Replace("/", ".")) != null)
                 {
+                    string extension = request.Page.Substring(request.Page.LastIndexOf(".")+1);
                     string resource = server.assembly_namespace + "." + request.Page.Replace("/", ".");
-                    Servlet.printResource(server.assembly, resource, request, response);
+                    Servlet.printResource(server.assembly, resource, extension, request, response);
                 }
 
                 else
