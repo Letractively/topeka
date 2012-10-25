@@ -1,0 +1,38 @@
+C:\Proyectos\jquerysharp\Topeka\TestServer\obj\x86\Debug\TestServer.csprojResolveAssemblyReference.cache
+C:\Proyectos\jquerysharp\Topeka\TestServer\bin\Debug\TestServer.exe.config
+C:\Proyectos\jquerysharp\Topeka\TestServer\bin\Debug\TestServer.exe
+C:\Proyectos\jquerysharp\Topeka\TestServer\bin\Debug\TestServer.pdb
+C:\Proyectos\jquerysharp\Topeka\TestServer\bin\Debug\Topeka.dll
+C:\Proyectos\jquerysharp\Topeka\TestServer\bin\Debug\Topeka.pdb
+C:\Proyectos\jquerysharp\Topeka\TestServer\bin\Debug\Topeka.xml
+C:\Proyectos\jquerysharp\Topeka\TestServer\obj\x86\Debug\TestServer.exe
+C:\Proyectos\jquerysharp\Topeka\TestServer\obj\x86\Debug\TestServer.pdb
+C:\Proyectos\Topeka\TestServer\bin\Debug\TestServer.exe.config
+C:\Proyectos\Topeka\TestServer\bin\Debug\TestServer.exe
+C:\Proyectos\Topeka\TestServer\bin\Debug\TestServer.pdb
+C:\Proyectos\Topeka\TestServer\bin\Debug\Topeka.dll
+C:\Proyectos\Topeka\TestServer\bin\Debug\Topeka.pdb
+C:\Proyectos\Topeka\TestServer\bin\Debug\Topeka.xml
+C:\Proyectos\Topeka\TestServer\obj\x86\Debug\TestServer.csprojResolveAssemblyReference.cache
+C:\Proyectos\Topeka\TestServer\obj\x86\Debug\TestServer.exe
+C:\Proyectos\Topeka\TestServer\obj\x86\Debug\TestServer.pdb
+E:\Backup Dell E6410\Datos\Proyectos\Topeka\TestServer\bin\Debug\TestServer.exe.config
+E:\Backup Dell E6410\Datos\Proyectos\Topeka\TestServer\obj\x86\Debug\TestServer.exe
+E:\Backup Dell E6410\Datos\Proyectos\Topeka\TestServer\obj\x86\Debug\TestServer.pdb
+E:\Backup Dell E6410\Datos\Proyectos\Topeka\TestServer\bin\Debug\TestServer.exe
+E:\Backup Dell E6410\Datos\Proyectos\Topeka\TestServer\bin\Debug\TestServer.pdb
+E:\Backup Dell E6410\Datos\Proyectos\Topeka\TestServer\bin\Debug\Topeka.dll
+E:\Backup Dell E6410\Datos\Proyectos\Topeka\TestServer\bin\Debug\Topeka.pdb
+E:\Backup Dell E6410\Datos\Proyectos\Topeka\TestServer\bin\Debug\Topeka.xml
+E:\Backup Dell E6410\Datos\Proyectos\Topeka\TestServer\obj\x86\Debug\TestServer.csprojResolveAssemblyReference.cache
+N:\Proyectos\Topeka\TestServer\bin\Debug\TestServer.exe.config
+N:\Proyectos\Topeka\TestServer\obj\x86\Debug\TestServer.exe
+N:\Proyectos\Topeka\TestServer\obj\x86\Debug\TestServer.pdb
+N:\Proyectos\Topeka\TestServer\bin\Debug\TestServer.exe
+N:\Proyectos\Topeka\TestServer\bin\Debug\TestServer.pdb
+N:\Proyectos\Topeka\TestServer\bin\Debug\TestLibrary.dll
+N:\Proyectos\Topeka\TestServer\bin\Debug\Topeka.dll
+N:\Proyectos\Topeka\TestServer\bin\Debug\TestLibrary.pdb
+N:\Proyectos\Topeka\TestServer\bin\Debug\Topeka.pdb
+N:\Proyectos\Topeka\TestServer\bin\Debug\Topeka.xml
+N:\Proyectos\Topeka\TestServer\obj\x86\Debug\TestServer.csprojResolveAssemblyReference.cache

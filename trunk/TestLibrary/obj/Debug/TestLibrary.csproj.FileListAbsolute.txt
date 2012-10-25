@@ -1,0 +1,4 @@
+N:\Proyectos\Topeka\TestLibrary\bin\Debug\TestLibrary.dll
+N:\Proyectos\Topeka\TestLibrary\bin\Debug\TestLibrary.pdb
+N:\Proyectos\Topeka\TestLibrary\obj\Debug\TestLibrary.dll
+N:\Proyectos\Topeka\TestLibrary\obj\Debug\TestLibrary.pdb

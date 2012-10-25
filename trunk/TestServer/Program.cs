@@ -13,7 +13,8 @@ namespace TestServer
         static void Main(string[] args)
         {
             Server server = new Server(2000);
-            server.setAssembly(Assembly.GetExecutingAssembly(), "TestServer");
+            server.addAssembly(Assembly.GetExecutingAssembly(), "TestServer");
+            server.addAssembly(Assembly.Load("TestLibrary"), "TestLibrary.web");
             server.start();
             Process.Start("http://localhost:2000");
         }
