@@ -141,6 +141,17 @@ namespace Topeka
             return assembly.GetManifestResourceStream(resource);
         }
 
+        internal static ResourceAssembly findResourceStream(Server server, string resource)
+        {
+            ResourceAssembly toReturn = null;
+            foreach (ResourceAssembly resource_assembly in server.resources)
+            {
+                if (resource_assembly.assembly.GetManifestResourceStream(resource_assembly.assembly_namespace + "." + resource) != null) return resource_assembly;
+            }
+            return toReturn;
+        }
+
+
         internal static void printResource(Assembly assembly, string resource, string extension, Request request, Response response)
         {
             Stream stream = assembly.GetManifestResourceStream(resource);

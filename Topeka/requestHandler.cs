@@ -153,11 +153,12 @@ namespace Topeka
                 {
                     Servlet.doGetTopekaLogo(request, response);
                 }
-                else if (server.assembly != null && Servlet.getResourceStream(server.assembly, server.assembly_namespace + "." + request.Page.Replace("/", ".")) != null)
+                else if (server.resources.Count>0 && Servlet.findResourceStream(server, request.Page.Replace("/", ".")) != null)
                 {
                     string extension = request.Page.Substring(request.Page.LastIndexOf(".")+1);
-                    string resource = server.assembly_namespace + "." + request.Page.Replace("/", ".");
-                    Servlet.printResource(server.assembly, resource, extension, request, response);
+                    ResourceAssembly resource_assembly = Servlet.findResourceStream(server, request.Page.Replace("/", "."));
+                    string resource = resource_assembly.assembly_namespace + "." + request.Page.Replace("/", ".");
+                    Servlet.printResource(resource_assembly.assembly, resource, extension, request, response);
                 }
 
                 else

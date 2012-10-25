@@ -1,0 +1,430 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Topeka</name>
+    </assembly>
+    <members>
+        <member name="T:Topeka.Cookie">
+            <summary>
+            A Class that represents a cookie
+            </summary>
+        </member>
+        <member name="F:Topeka.Cookie.name">
+            <summary>
+            The name of the cookie
+            </summary>
+        </member>
+        <member name="F:Topeka.Cookie.value">
+            <summary>
+            The value of the cookie
+            </summary>
+        </member>
+        <member name="F:Topeka.Cookie.expireTime">
+            <summary>
+            The expiration time, example "expires=Wednesday, 09-Nov-99 23:12:40 GMT"
+            </summary>
+        </member>
+        <member name="M:Topeka.Cookie.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new Cookie object, setting the name and value from parameters
+            </summary>
+            <param name="name">The name of the Cookie</param>
+            <param name="value">The value of the Cookie</param>
+        </member>
+        <member name="M:Topeka.Cookie.setMaxAge(System.Int32)">
+            <summary>
+            Sets the age of the cookie
+            </summary>
+            <param name="seconds">The seconds that the cookie will be active, the method converts the value in seconds to the corresponding format</param>
+        </member>
+        <member name="M:Topeka.Cookie.serialize">
+            <summary>
+            This method returns the string representation of the cookie that will be sent to the client
+            </summary>
+            <returns>The string representation of the cookie, in this format:
+            Set-Cookie: CUSTOMER=WILE_E_COYOTE; path=/; expires=Wednesday, 09-Nov-99 23:12:40 GMT
+            </returns>
+        </member>
+        <member name="T:Topeka.ResourceAssembly">
+            <summary>
+            This class represents an Assembly with embedded resources that the server will load from
+            </summary>
+        </member>
+        <member name="M:Topeka.ResourceAssembly.#ctor(System.Reflection.Assembly,System.String)">
+            <summary>
+            Contructor
+            </summary>
+            <param name="assembly">The Assembly to load resources from</param>
+            <param name="assembly_namespace">The Namespace from the assembly</param>
+        </member>
+        <member name="T:Topeka.SSLServer">
+            <summary>
+            This class represents the server itself, it is the base to create the listeners that handles the requests
+            </summary>
+        </member>
+        <member name="T:Topeka.Server">
+            <summary>
+            This class represents the server itself, it is the base to create the listeners that handles the requests
+            </summary>
+        </member>
+        <member name="M:Topeka.Server.setVerbosityLevel(System.Int32)">
+            <summary>
+            Sets the Verbosity level to print to a console or file
+            If set to 0, no messages will be printed
+            If set to 1, Information messages will be printed
+            If set to 2, Information and Exceptions will be printed
+            </summary>
+            <param name="verboseLevel">The verbose level to set</param>
+        </member>
+        <member name="M:Topeka.Server.#ctor">
+            <summary>
+            Default Constructor
+            </summary>
+        </member>
+        <member name="M:Topeka.Server.isSSL">
+            <summary>
+            Returns true if the server is SSL-Enabled
+            </summary>
+        </member>
+        <member name="M:Topeka.Server.setRootPath(System.String)">
+            <summary>
+            Sets the Root Path to handle static pages. 
+            If not set, the server will not handle static pages
+            </summary>
+            <param name="rootPath">The Path where you want to serve. It must be an absolute path.</param>
+        </member>
+        <member name="M:Topeka.Server.addAssembly(System.Reflection.Assembly,System.String)">
+            <summary>
+            Add an Assembly to read static pages.
+            To read a static page from an assembly you must embed that page as embedded resource (in object properties)
+            </summary>
+            <param name="assembly">The Assembly where the static pages are stored in as resources</param>
+            <param name="assembly_namespace">The Namespace in wich the resources are stored.</param>
+        </member>
+        <member name="M:Topeka.Server.setLogFileName(System.String)">
+            <summary>
+            Sets the file name of the log
+            </summary>
+            <param name="fileName">A string with the full path to the file name</param>
+        </member>
+        <member name="M:Topeka.Server.setIPAddress(System.Net.IPAddress)">
+            <summary>
+            Sets the IPAddress to listen to
+            </summary>
+            <param name="ipAddress">The IPAddress of the network interface you want to listen to</param>
+        </member>
+        <member name="M:Topeka.Server.start">
+            <summary>
+            Starts the server, this method creates the first listening thread
+            </summary>
+        </member>
+        <member name="M:Topeka.Server.stop">
+            <summary>
+            Stops the current Server, closes the listener
+            </summary>
+        </member>
+        <member name="M:Topeka.Server.#ctor(System.Int32)">
+            <summary>
+            Creates the server object, setting the custom port received as parameter
+            </summary>
+            <param name="port">The port to listen</param>
+        </member>
+        <member name="M:Topeka.Server.#ctor(System.Int32,System.Net.IPAddress)">
+            <summary>
+            Creates the server object, setting the custom port and IPAddress received as parameter
+            </summary>
+            <param name="port">The port to listen</param>
+            <param name="ipAddress">The IPAddress to listen</param>
+        </member>
+        <member name="M:Topeka.SSLServer.getCertificate">
+            <summary>
+            Returns the X509Certificate associated with this server
+            </summary>
+        </member>
+        <member name="M:Topeka.SSLServer.#ctor(System.Int32,System.String)">
+            <summary>
+            Creates the server object, setting the custom port received as parameter
+            </summary>
+            <param name="port">The port to listen</param>
+            <param name="certificateFile">The absolute path to the certificate file</param>
+        </member>
+        <member name="M:Topeka.SSLServer.#ctor(System.Int32,System.Security.Cryptography.X509Certificates.X509Certificate)">
+            <summary>
+            Creates the server object, setting the custom port received as parameter
+            </summary>
+            <param name="port">The port to listen</param>
+            <param name="certificate">An X509Certificate object previously created</param>
+        </member>
+        <member name="M:Topeka.SSLServer.#ctor(System.Int32,System.String,System.Net.IPAddress)">
+            <summary>
+            Creates the server object, setting the custom port and IPAddress received as parameter
+            </summary>
+            <param name="port">The port to listen</param>
+            <param name="ipAddress">The IPAddress to listen</param>
+            <param name="certificateFile">The absolute path to the certificate file</param>
+        </member>
+        <member name="T:Topeka.HTMLHelper">
+            <summary>
+            This class is used to help in HTML encodings
+            </summary>
+        </member>
+        <member name="M:Topeka.HTMLHelper.encode(System.String)">
+            <summary>
+            Encodes the input string using the UrlEncode method
+            </summary>
+            <param name="input">The string to be encoded</param>
+            <returns>The encoded string</returns>
+        </member>
+        <member name="M:Topeka.HTMLHelper.decode(System.String)">
+            <summary>
+            Decodes the input string using the UrlDecode method
+            </summary>
+            <param name="input">The string to be decoded</param>
+            <returns>The decoded string</returns>
+        </member>
+        <member name="T:Topeka.Range">
+            <summary>
+            A Class that represents a Range
+            </summary>
+        </member>
+        <member name="P:Topeka.Range.FirstByte">
+            <summary>
+            The First Byte of the Range
+            </summary>
+        </member>
+        <member name="P:Topeka.Range.LastByte">
+            <summary>
+            The Last Byte of the Range
+            </summary>
+        </member>
+        <member name="T:Topeka.Request">
+            <summary>
+            A Class that represents the request from the client
+            </summary>
+        </member>
+        <member name="M:Topeka.Request.getParameter(System.String)">
+            <summary>
+            Returns the parameter specified from the request
+            </summary>
+            <param name="parameter">The parameter to be returned</param>
+            <returns>The value for the parameter specified, null if there is no parameter</returns>
+        </member>
+        <member name="M:Topeka.Request.#ctor(System.IO.Stream,Topeka.Server)">
+            <summary>
+            Construct a Request object that contains the information received from the client
+            </summary>
+            <param name="stream">The stream associated to the TCPClient</param>
+            <param name="server">The server that handled the request</param>
+        </member>
+        <member name="P:Topeka.Request.Method">
+            <summary>
+            This Property represent the type of request (GET or POST).
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.Authorization">
+            <summary>
+            Authentication credentials for HTTP authentication
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.Path">
+            <summary>
+            The complete path of the request received from the client
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.HTTPVersion">
+            <summary>
+            The version of the HTTP (example HTTP/1.1)
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.Accept">
+            <summary>
+            Content-Types that are acceptable
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.AcceptLanguage">
+            <summary>
+            Acceptable languages for response
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.AcceptEncoding">
+            <summary>
+            Acceptable encodings
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.UserAgent">
+            <summary>
+            The user agent string of the user agent
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.Host">
+            <summary>
+            The Client Host connected
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.Connection">
+            <summary>
+            What type of connection the user-agent would prefer
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.Ranges">
+            <summary>
+            An array of Range Objects that determine the Ranges that the browser wants to retrieve
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.ClientIP">
+            <summary>
+            The Client IP connected 
+            </summary>
+        </member>
+        <member name="P:Topeka.Request.Cookies">
+            <summary>
+            An array of Cookie Objects previously sent by the server with Set-Cookie
+            </summary>
+        </member>
+        <member name="T:Topeka.requestHandler">
+            <summary>
+            This class is used to handle requests from clients.
+            It creates a new thread to handle the request.
+            </summary>
+        </member>
+        <member name="M:Topeka.requestHandler.#ctor(System.Net.Sockets.TcpClient,Topeka.Server)">
+            <summary>
+            Creates a requestHandler object and starts the thread for handling the request
+            </summary>
+            <param name="client">The TCPClient connected</param>
+            <param name="server">The Server Object</param>
+        </member>
+        <member name="T:Topeka.Response">
+            <summary>
+            A Class that represents the response sent to the client
+            </summary>
+        </member>
+        <member name="M:Topeka.Response.print(System.String)">
+            <summary>
+            Prints a string to the client, it doesn't include newline
+            </summary>
+            <param name="whatToPrint">
+            A string that represents what to print to the client
+            </param>
+        </member>
+        <member name="M:Topeka.Response.println(System.String)">
+            <summary>
+            Prints a string to the client, including a newline
+            </summary>
+            <param name="whatToPrint">
+            A string that represents what to print to the client
+            </param>
+        </member>
+        <member name="M:Topeka.Response.print(System.Byte[])">
+            <summary>
+            Prints an array of Byte objects to the client, it can be used in situations where you need to send binary objects like images or files
+            </summary>
+            <param name="whatToPrint">The array of objects to be sent</param>
+        </member>
+        <member name="M:Topeka.Response.printFile(System.String,System.Boolean)">
+            <summary>
+            Prints a file to the client, the MIME type is sent if the extension is known, this method uses a buffer to read the file before sending it to the socket.
+            If the socket is closed, then it stops reading the file. Use this method when you need to transfer large files that cannot be held in a memory stream.
+            </summary>
+            <param name="fileName">The filename to send to the client</param>
+            <param name="forceDownload">Set this flag to true when you want the browser force the download instead of displaying it</param>
+        </member>
+        <member name="M:Topeka.Response.setContentType(System.String)">
+            <summary>
+            Sets the header Content-Type to the specified
+            </summary>
+            <param name="type">The type of data to be sent in the response</param>
+        </member>
+        <member name="M:Topeka.Response.setHeader(System.String,System.String)">
+            <summary>
+            Set the header specified and replaces the value when the header is already setted
+            </summary>
+            <param name="header">The name of the header</param>
+            <param name="value">The value to be set</param>
+        </member>
+        <member name="M:Topeka.Response.setStatusCode(System.String)">
+            <summary>
+            Set the status code for the response, by default the status code is 200 OK
+            </summary>
+            <param name="code">The code to set</param>
+        </member>
+        <member name="M:Topeka.Response.#ctor(System.IO.Stream@,Topeka.Request)">
+            <summary>
+            Construct a Response object that can will be used to send data to the client
+            </summary>
+            <param name="stream">The stream connected, used to send data</param>
+            <param name="request">The request received from the client</param>
+        </member>
+        <member name="M:Topeka.Response.addCookie(Topeka.Cookie)">
+            <summary>
+            Adds the Cookie object to the Cookie list that will be sent to the client
+            </summary>
+            <param name="cookie">The cookie object to be added</param>
+        </member>
+        <member name="T:Topeka.Servlet">
+            <summary>
+            This class represent a servlet. To use this class you can create a subclass and override the methods doGet and doPost to handle requests
+            </summary>
+        </member>
+        <member name="M:Topeka.Servlet.getServlet(System.String)">
+            <summary>
+            This method searches any servlet subclass within the assemblies and returns the class Type
+            </summary>
+            <param name="servlet">The servlet subclass to be searched</param>
+            <returns>Returns the Type of the servlet subclass</returns>
+        </member>
+        <member name="M:Topeka.Servlet.doGet(Topeka.Request,Topeka.Response)">
+            <summary>
+            The abstract method that needs to be overriden to handle GET requests
+            </summary>
+            <param name="request">The Request object containing information about the request received from the client</param>
+            <param name="response">The Response object that will be used to send data to the client</param>
+        </member>
+        <member name="M:Topeka.Servlet.doPost(Topeka.Request,Topeka.Response)">
+            <summary>
+            The virtual method that needs to be overriden to handle POST requests
+            </summary>
+            <param name="request">The Request object containing information about the request received from the client</param>
+            <param name="response">The Response object that will be used to send data to the client</param>
+        </member>
+        <member name="M:Topeka.Servlet.invokeMethod(System.Type,System.String,Topeka.Request,Topeka.Response)">
+            <summary>
+            This method is called when the server detects a parameter "method" in the list of parameters
+            Example: Users?method=AddUser will try to invoke the method AddUser from the class Users 
+            </summary>
+            <param name="type">The type of the Servlet subclass</param>
+            <param name="method">The method name, in string format</param>
+            <param name="request">The Request object used to handle this request</param>
+            <param name="response">The Response object used to handle this request</param>
+        </member>
+        <member name="T:Topeka.Tokenizer">
+            <summary>
+            A Class used to cut strings based on delimiter chars
+            </summary>
+        </member>
+        <member name="M:Topeka.Tokenizer.#ctor(System.String,System.String)">
+            <summary>
+            Creates a Tokenizer object based on a string
+            <param name="input">The string to be tokenized</param>
+            <param name="token">The token string that is used as delimiter</param>
+            </summary>
+        </member>
+        <member name="M:Topeka.Tokenizer.nextToken">
+            <summary>
+            Call this method to get the next string, then it automatically moves the cursor to the next token
+            </summary>
+            <returns>Return a string representing the current token</returns>
+        </member>
+        <member name="M:Topeka.Tokenizer.hasMoreTokens">
+            <summary>
+            Call this method to know if there are tokens left
+            </summary>
+            <returns>Return true if there are more tokens left, false if there are no more tokens</returns>
+        </member>
+        <member name="M:Topeka.Tokenizer.firstToken">
+            <summary>
+            Moves the cursor to the first token
+            </summary>
+        </member>
+    </members>
+</doc>

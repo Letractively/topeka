@@ -57,8 +57,7 @@ namespace Topeka
         internal bool stopRequested;
         internal bool ssl;
         internal ManualResetEvent signalThread;
-        internal Assembly assembly;
-        internal string assembly_namespace;
+        internal List<ResourceAssembly> resources;
 
         /// <summary>
         /// Sets the Verbosity level to print to a console or file
@@ -101,15 +100,15 @@ namespace Topeka
         }
 
         /// <summary>
-        /// Sets the Assembly to read static pages.
+        /// Add an Assembly to read static pages.
         /// To read a static page from an assembly you must embed that page as embedded resource (in object properties)
         /// </summary>
         /// <param name="assembly">The Assembly where the static pages are stored in as resources</param>
         /// <param name="assembly_namespace">The Namespace in wich the resources are stored.</param>
-        public void setAssembly(Assembly assembly, string assembly_namespace)
+        public void addAssembly(Assembly assembly, string assembly_namespace)
         {
-            this.assembly = assembly;
-            this.assembly_namespace = assembly_namespace;
+            ResourceAssembly resource = new ResourceAssembly(assembly, assembly_namespace);
+            resources.Add(resource);
         }
 
 
@@ -258,6 +257,7 @@ namespace Topeka
             rootPath = null;
             stopRequested = false;
             signalThread = new ManualResetEvent(false);
+            resources = new List<ResourceAssembly>();
         }
 
         /// <summary>
